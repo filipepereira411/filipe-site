@@ -16,7 +16,7 @@
       align-items: center;
     }
     .panel {
-      max-width: 1400px;
+      max-width: 1500px;
       width: 100%;
       background: white;
       padding: 30px;
@@ -49,7 +49,7 @@
     }
     .btn-add:hover { background-color: #0051b3; }
 
-    /* TABELA SUPREMA */
+    /* TABELA ALINHADA COM A IMAGEM DE REFERÊNCIA */
     .rdp-table {
       width: 100%;
       border-collapse: collapse;
@@ -118,7 +118,7 @@
     .periph-checkbox { cursor: pointer; margin: 0; }
     
     .network-console {
-      max-width: 1400px;
+      max-width: 1500px;
       width: 100%;
       background: #111;
       color: #fff;
@@ -144,54 +144,60 @@
 
   <div class="panel">
     <div class="header-actions">
-      <h1>Matriz Suprema de Barramento — Gestão Absoluta por IP</h1>
-      <!-- BOTÃO DO MAIS (➕) -->
-      <button class="btn-add" onclick="adicionarNovaMaquina()">➕ Adicionar Nó de Rede</button>
+      <h1>Tabela de Classificação de Dispositivos e Controlo de Nós (PAP)</h1>
+      <button class="btn-add" onclick="adicionarNovaMaquina()">➕ Adicionar Dispositivo</button>
     </div>
     
-    <!-- INFRAESTRUTURA COMPLETA TOTALMENTE EM TABELA -->
+    <!-- ESTRUTURA IDENTICA À SUA IMAGEM DE REFERÊNCIA -->
     <table class="rdp-table" id="tabelaMaquinas">
       <thead>
         <tr>
-          <th>Máquina / Host</th>
-          <th>Endereço IP</th>
-          <th>Alimentação</th>
-          <th>Gestão ACPI / WoL</th>
-          <th>📷 Multimédia</th>
-          <th>🔌 Portas Físicas</th>
-          <th>💾 Armazenamento</th>
-          <th>☝️ Avançado</th>
+          <th>Máquina / IP</th>
+          <th>Estado Físico</th>
+          <th>Gestão (WoL/ACPI)</th>
+          <th>Entrada (Input)</th>
+          <th>Saída (Output)</th>
+          <th>Entrada/Saída (Híbridos)</th>
+          <th>Armazenamento</th>
+          <th>Processamento</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        <!-- LINHA PADRÃO INTERATIVA (MÁQUINA 1) -->
+        <!-- DISPOSITIVO PADRÃO MAPPED -->
         <tr data-ip="192.168.1.66">
-          <td><strong>Servidor Central (1)</strong></td>
-          <td><code>192.168.1.66</code></td>
+          <td><strong>Servidor Central (1)</strong><br><code>192.168.1.66</code></td>
           <td><span class="status-badge status-on" id="status-192168166">🟢 LIGADO</span></td>
           <td>
-            <button class="btn-power btn-wake" onclick="enviarWakeOnLan('192.168.1.66')">🔌 Ligar</button>
-            <button class="btn-power btn-shutdown" onclick="enviarShutdown('192.168.1.66')">🛑 Desligar</button>
+            <button class="btn-power btn-wake" onclick="enviarWakeOnLan('192.168.1.66')">🔌 Ligar</button><br>
+            <button class="btn-power btn-shutdown" style="margin-top:4px;" onclick="enviarShutdown('192.168.1.66')">🛑 Desligar</button>
           </td>
-          <!-- COLUNAS SEPARADAS DE PERIFÉRICOS DE HARDWARE -->
+          <!-- COLUNA: ENTRADA -->
           <td>
-            <label class="periph-label"><input type="checkbox" class="pcam" checked>Câmara</label><br>
-            <label class="periph-label"><input type="checkbox" class="paudio" checked>Microfone</label>
+            <label class="periph-label"><input type="checkbox" checked>Teclado / Rato</label><br>
+            <label class="periph-label"><input type="checkbox" checked>Webcam USB</label><br>
+            <label class="periph-label"><input type="checkbox">Microfone</label>
           </td>
+          <!-- COLUNA: SAÍDA -->
           <td>
-            <label class="periph-label"><input type="checkbox" class="pcom" checked>Portas COM</label><br>
-            <label class="periph-label"><input type="checkbox" class="pusb" checked>USB Raw</label>
+            <label class="periph-label"><input type="checkbox" checked>Monitor principal</label><br>
+            <label class="periph-label"><input type="checkbox" checked>Colunas de som</label>
           </td>
+          <!-- COLUNA: HÍBRIDOS -->
           <td>
-            <label class="periph-label"><input type="checkbox" class="pdisk" checked>Discos/Pens</label><br>
-            <label class="periph-label"><input type="checkbox" class="pclip" checked>Clipboard</label>
+            <label class="periph-label"><input type="checkbox">Ecrã tátil</label><br>
+            <label class="periph-label"><input type="checkbox" checked>Placa de Rede</label>
           </td>
+          <!-- COLUNA: ARMAZENAMENTO -->
           <td>
-            <label class="periph-label"><input type="checkbox" class="pbiom">Biometria</label><br>
-            <label class="periph-label"><input type="checkbox" class="psens">Sensores IoT</label>
+            <label class="periph-label"><input type="checkbox" checked>Disco Rígido / SSD</label><br>
+            <label class="periph-label"><input type="checkbox" checked>Pendrive / Mídia</label>
           </td>
-          <!-- COLUNA DO CAIXOTE DO LIXO (🗑️) -->
+          <!-- COLUNA: PROCESSAMENTO -->
+          <td>
+            <label class="periph-label"><input type="checkbox" checked>Processador (CPU)</label><br>
+            <label class="periph-label"><input type="checkbox" checked>Placa Gráfica (GPU)</label>
+          </td>
           <td><button class="btn-delete" onclick="removerMaquina(this)">🗑️</button></td>
         </tr>
       </tbody>
@@ -199,9 +205,9 @@
   </div>
 
   <div class="network-console">
-    <h3>💻 Consola de Monitorização de Tráfego</h3>
+    <h3>💻 Monitorização da Matriz de Barramentos</h3>
     <div id="terminal-stream">
-      [SISTEMA] Matriz estruturada em tabela. Pronto para mapear barramentos na gama única 192.168.0.1 - 192.168.1.254...
+      [SISTEMA] Tabela de classificação estruturada e sincronizada com a gama 192.168.0.1 - 192.168.1.254...
     </div>
   </div>
 
@@ -213,76 +219,67 @@
       term.scrollTop = term.scrollHeight;
     }
 
-    // ADICIONAR MÁQUINA (➕) DIRECTAMENTE NAS COLUNAS DA TABELA
+    // INTERAÇÃO DINÂMICA DO MAIS (➕) REPRODUZINDO TODAS AS COLUNAS DA IMAGEM
     function adicionarNovaMaquina() {
-      const nome = prompt("Nome do Host Remoto:", "Posto de Controlo Lab");
+      const nome = prompt("Nome do Dispositivo:", "Posto de Controlo Lab");
       if (!nome) return;
       const ip = prompt("Endereço IP Único (gama local):", "192.168.0.100");
       if (!ip) return;
 
-      const tabela = document.getElementById('tabelaMaquinas').getElementsByTagName('tbody')[0];
+      const tabela = document.getElementById('tabelaMaquinas').getElementsByTagName('tbody');
       const novaLinha = tabela.insertRow();
       novaLinha.setAttribute('data-ip', ip);
 
-      // Limpa os pontos para gerar chaves de ID sem quebrar a DOM do browser
       const idLimpo = ip.replace(/\./g, '');
 
       novaLinha.innerHTML = `
-        <td><strong>${nome}</strong></td>
-        <td><code>${ip}</code></td>
+        <td><strong>${nome}</strong><br><code>${ip}</code></td>
         <td><span class="status-badge status-off" id="status-${idLimpo}">🔴 DESLIGADO</span></td>
         <td>
-          <button class="btn-power btn-wake" onclick="enviarWakeOnLan('${ip}')">🔌 Ligar</button>
-          <button class="btn-power btn-shutdown" onclick="enviarShutdown('${ip}')">🛑 Desligar</button>
+          <button class="btn-power btn-wake" onclick="enviarWakeOnLan('${ip}')">🔌 Ligar</button><br>
+          <button class="btn-power btn-shutdown" style="margin-top:4px;" onclick="enviarShutdown('${ip}')">🛑 Desligar</button>
         </td>
         <td>
-          <label class="periph-label"><input type="checkbox" class="pcam" checked>Câmara</label><br>
-          <label class="periph-label"><input type="checkbox" class="paudio">Microfone</label>
+          <label class="periph-label"><input type="checkbox" checked>Teclado / Rato</label><br>
+          <label class="periph-label"><input type="checkbox" checked>Webcam USB</label><br>
+          <label class="periph-label"><input type="checkbox">Microfone</label>
         </td>
         <td>
-          <label class="periph-label"><input type="checkbox" class="pcom" checked>Portas COM</label><br>
-          <label class="periph-label"><input type="checkbox" class="pusb">USB Raw</label>
+          <label class="periph-label"><input type="checkbox" checked>Monitor principal</label><br>
+          <label class="periph-label"><input type="checkbox">Colunas de som</label>
         </td>
         <td>
-          <label class="periph-label"><input type="checkbox" class="pdisk" checked>Discos/Pens</label><br>
-          <label class="periph-label"><input type="checkbox" class="pclip" checked>Clipboard</label>
+          <label class="periph-label"><input type="checkbox">Ecrã tátil</label><br>
+          <label class="periph-label"><input type="checkbox" checked>Placa de Rede</label>
         </td>
         <td>
-          <label class="periph-label"><input type="checkbox" class="pbiom">Biometria</label><br>
-          <label class="periph-label"><input type="checkbox" class="psens">Sensores IoT</label>
+          <label class="periph-label"><input type="checkbox" checked>Disco Rígido / SSD</label><br>
+          <label class="periph-label"><input type="checkbox">Pendrive / Mídia</label>
+        </td>
+        <td>
+          <label class="periph-label"><input type="checkbox" checked>Processador (CPU)</label><br>
+          <label class="periph-label"><input type="checkbox" checked>Placa Gráfica (GPU)</label>
         </td>
         <td><button class="btn-delete" onclick="removerMaquina(this)">🗑️</button></td>
       `;
 
-      printTerminal(`[REGISTO] Novo computador alocado dinamicamente na tabela no IP: ${ip}`, 'sucesso');
+      printTerminal(`[REGISTO] Novo nó inserido com sucesso na matriz sob o IP: ${ip}`, 'sucesso');
     }
 
-    // CAIXOTE DO LIXO (🗑️)
+    // INTERAÇÃO DO CAIXOTE DO LIXO (🗑️)
     function removerMaquina(botao) {
       const linha = botao.closest('tr');
       const ip = linha.getAttribute('data-ip');
       
-      if (confirm(`Remover definitivamente o computador ${ip} da tabela?`)) {
+      if (confirm(`Remover permanentemente o dispositivo ${ip} da tabela?`)) {
         linha.remove();
-        printTerminal(`❌ Nó de rede com IP ${ip} foi eliminado da tabela de controlo.`, 'erro');
+        printTerminal(`❌ Dispositivo com o IP ${ip} foi eliminado e desconectado da tabela.`, 'erro');
       }
     }
 
     function enviarWakeOnLan(ip) {
       const idLimpo = ip.replace(/\./g, '');
       const badge = document.getElementById(`status-${idLimpo}`) || document.getElementById(`status-192168166`);
-      printTerminal(`[WoL] Enviar Magic Packet UDP para o barramento físico no IP ${ip}...`);
+      printTerminal(`[WoL] A disparar Magic Packet UDP para a sub-rede do IP ${ip}...`);
       
       setTimeout(() => {
-        if(badge) {
-          badge.className = 'status-badge status-on';
-          badge.innerText = '🟢 LIGADO';
-        }
-        printTerminal(`✓ Ligação estabelecida! Hardware e periféricos sincronizados no IP único.`, 'sucesso');
-      }, 700);
-    }
-
-    function enviarShutdown(ip) {
-      const idLimpo = ip.replace(/\./g, '');
-      const badge = document.getElementById(`status-${idLimpo}`) || document.getElementById(`status-192168166`);
-      printTerminal(`[ACPI] Desligar via pacote de comando HTTP no IP ${ip}...`);
