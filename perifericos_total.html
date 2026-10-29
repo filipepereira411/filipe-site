@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Global de Periféricos & Redes</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --primary: #38bdf8;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h2 {
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .search-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 300px;
+            transition: 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .table-responsive {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #111827;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr {
+            transition: background-color 0.2s;
+        }
+
+        tr:hover {
+            background-color: #24334d;
+        }
+
+        /* Código IP / Link */
+        .ip-badge {
+            font-family: monospace;
+            background: #0f172a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+            border: 1px solid #1e293b;
+        }
+
+        /* Estado */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-online { background-color: var(--success); }
+        .status-offline { background-color: var(--danger); }
+
+        /* Barras de Diagnóstico */
+        .progress-bar-bg {
+            background: #334155;
+            border-radius: 4px;
+            width: 80px;
+            height: 6px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* Botões de Ação */
+        .btn-action {
+            background: #334155;
+            color: var(--text-main);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        .btn-danger-action:hover {
+            background: var(--danger);
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-area">
+        <h2>Gestão Central de Periféricos & Redes IP</h2>
+        <input type="text" id="filtroGlobal" class="search-box" placeholder="Filtrar por nome, IP, categoria..." onkeyup="filtrarTabela()">
+    </div>
+    
+    <div class="table-responsive">
+        <table id="tabelaGlobal">
+            <thead>
+                <tr>
+                    <th>Periférico / Dispositivo</th>
+                    <th>Tipo / Categoria</th>
+                    <th>Endereço IP Local</th>
+                    <th>Métrica / Diagnóstico</th>
+                    <th>Ações de Controlo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Monitores IPS -->
+                <tr>
+                    <td><strong>Monitor IPS Pro 32"</strong></td>
+                    <td>Ecrã / Saída</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.50</span></td>
+                    <td>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 100%; background-color: var(--success);"></div></div>
+                        100% sRGB
+                    </td>
+                    <td><button class="btn-action" onclick="acederIP('192.168.1.50', '80')">Painel Web</button></td>
+                </tr>
+                <tr>
+                    <td><strong>Monitor Gaming IPS 27"</strong></td>
+                    <td>Ecrã / Saída</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.51</span></td>
+                    <td>144Hz / Ativo</td>
+                    <td><button class="btn-action" onclick="acederIP('192.168.1.51', '80')">Painel Web</button></td>
+                </tr>
+                <!-- Periféricos de Entrada -->
+                <tr>
+                    <td><strong>Rato Sem Fios RGB</strong></td>
+                    <td>Entrada (Input)</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">Bluetooth</span></td>
+                    <td>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 72%; background-color: var(--success);"></div></div>
+                        72% Bat.
+                    </td>
+                    <td><button class="btn-action btn-danger-action" onclick="removerDispositivo(this)">Desligar</button></td>
+                </tr>
+                <tr>
+                    <td><strong>Teclado Mecânico USB</strong></td>
+                    <td>Entrada (Input)</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">Cabo Local</span></td>
+                    <td>Alimentado</td>
+                    <td><button class="btn-action btn-danger-action" onclick="removerDispositivo(this)">Desligar</button></td>
+                </tr>
+                <!-- Armazenamento / Infraestrutura -->
+                <tr>
+                    <td><strong>Servidor NAS (Discos IPS)</strong></td>
+                    <td>Armazenamento</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.100</span></td>
+                    <td>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 35%; background-color: var(--warning);"></div></div>
+                        35% Livre
+                    </td>
+                    <td><button class="btn-action" onclick="acederIP('192.168.1.100', '443')">Entrar (SSH)</button></td>
+                </tr>
+                <tr>
+                    <td><strong>Impressora 3D Escritório</strong></td>
+                    <td>Híbrido (E/S)</td>
+                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.85</span></td>
+                    <td>Pronta</td>
+                    <td><button class="btn-action" onclick="acederIP('192.168.1.85', '8080')">OctoPrint</button></td>
+                </tr>
+                <!-- Dispositivo Offline -->
+                <tr>
+                    <td><strong>Câmara de Segurança IPS</strong></td>
+                    <td>Câmara / Entrada</td>
+                    <td><span class="status-dot status-offline"></span><span class="ip-badge">192.168.1.200</span></td>
+                    <td><span style="color: var(--danger)">Inativo</span></td>
+                    <td><button class="btn-action" style="opacity: 0.4; cursor: not-allowed;" disabled>Indisponível</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Filtro global em tempo real (Pesquisa em qualquer coluna)
+    function filtrarTabela() {
+        const input = document.getElementById("filtroGlobal");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("tabelaGlobal");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let rowText = tr[i].innerText.toLowerCase();
+            if (rowText.indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    // Alerta simulando a entrada num dispositivo via IP e Porta
+    function acederIP(ip, porta) {
+        alert(`A abrir ligação de rede...\nDestino: http://${ip}:${porta}\n\nCertifique-se de que está na mesma rede local (Wi-Fi/Cabo) para efetuar o login.`);
+    }
+
+    // Ação para desligar periféricos locais
+    function removerDispositivo(botao) {
+        const linha = botao.closest('tr');
