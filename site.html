@@ -24,9 +24,31 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
       margin-bottom: 30px;
     }
-    h1 { color: #0070f3; margin-top: 0; font-size: 24px; }
-    p { color: #666; margin-bottom: 25px; }
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    h1 { color: #0070f3; margin: 0; font-size: 24px; }
     
+    /* BOTÃO DO MAIS (➕) */
+    .btn-add {
+      background-color: #0070f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-add:hover { background-color: #0051b3; }
+
     .rdp-table {
       width: 100%;
       border-collapse: collapse;
@@ -63,19 +85,26 @@
       font-size: 12px;
       cursor: pointer;
       margin-right: 5px;
-      transition: background 0.2s;
     }
     .btn-wake { background-color: #34a853; color: white; }
-    .btn-wake:hover { background-color: #2d8e47; }
     .btn-shutdown { background-color: #ea4335; color: white; }
-    .btn-shutdown:hover { background-color: #d23225; }
 
-    /* Nova Grelha Suprema de Periféricos Agrupados */
+    /* BOTÃO DO CAIXOTE DO LIXO (🗑️) */
+    .btn-delete {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .btn-delete:hover { background-color: #fee8e6; }
+
     .peripherals-super-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      padding: 10px 0;
     }
     .periph-group-title {
       grid-column: span 4;
@@ -85,17 +114,13 @@
       font-weight: bold;
       margin-top: 8px;
       border-bottom: 1px dashed #ddd;
-      padding-bottom: 2px;
     }
     .periph-label {
       font-size: 11px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      white-space: nowrap;
     }
-    .periph-checkbox { cursor: pointer; margin: 0; }
     
     .network-console {
       max-width: 1400px;
@@ -104,7 +129,6 @@
       color: #fff;
       border-radius: 12px;
       padding: 25px;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.15);
     }
     #terminal-stream {
       background: #000;
@@ -113,9 +137,8 @@
       font-family: 'Courier New', Courier, monospace;
       font-size: 13px;
       color: #00ff00;
-      height: 220px;
+      height: 180px;
       overflow-y: auto;
-      border: 1px solid #222;
     }
     .sucesso { color: #00ff00; font-weight: bold; }
     .alerta { color: #ffca28; }
@@ -125,70 +148,56 @@
 <body>
 
   <div class="panel">
-    <h1>Matriz Suprema de Barramento — Gestão Absoluta de Periféricos (Gama 192.168.0.1 - 192.168.1.254)</h1>
-    <p>Ligue/desligue hosts remotos na rede e interfile o mapeamento granular de todo e qualquer hardware detetável através de sinal assíncrono.</p>
+    <div class="header-actions">
+      <h1>Matriz Suprema de Barramento — Gestão Absoluta de Periféricos</h1>
+      <!-- BOTÃO DO MAIS SITUADO NO TOPO REGULAMENTAR -->
+      <button class="btn-add" onclick="adicionarNovaMaquina()">➕ Adicionar Máquina</button>
+    </div>
     
-    <table class="rdp-table">
+    <table class="rdp-table" id="tabelaMaquinas">
       <thead>
         <tr>
           <th style="width: 180px;">Nó / IP</th>
           <th style="width: 130px;">Estado Físico</th>
           <th style="width: 240px;">Gestão de Energia Remota</th>
           <th>Controlo Total e Mapeamento de Periféricos (TODOS)</th>
+          <th style="width: 50px;">Ações</th>
         </tr>
       </thead>
       <tbody>
-        <!-- MÁQUINA ÚNICA COM TODOS OS PERIFÉRICOS POSSÍVEIS MUNDO -->
-        <tr data-ip="192.168.1.66" data-mac="00:1A:2B:3C:4D:5E" data-name="Servidor Central">
+        <!-- MÁQUINA 1 -->
+        <tr data-ip="192.168.1.66">
+          <td><strong>Servidor Central (1)</strong><br><code>192.168.1.66</code></td>
+          <td><span class="status-badge status-on" id="status-192168166">🟢 LIGADO</span></td>
           <td>
-            <strong>Servidor Central (1)</strong><br>
-            <code>192.168.1.66</code>
-          </td>
-          <td><span class="status-badge status-on" id="status-1">🟢 LIGADO</span></td>
-          <td>
-            <button class="btn-power btn-wake" onclick="enviarWakeOnLan('192.168.1.66', '00:1A:2B:3C:4D:5E', 1)">🔌 Ligar (WoL)</button>
-            <button class="btn-power btn-shutdown" onclick="enviarShutdown('192.168.1.66', 1)">🛑 Desligar</button>
+            <button class="btn-power btn-wake" onclick="enviarWakeOnLan('192.168.1.66')">🔌 Ligar</button>
+            <button class="btn-power btn-shutdown" onclick="enviarShutdown('192.168.1.66')">🛑 Desligar</button>
           </td>
           <td>
             <div class="peripherals-super-grid">
-              <!-- MENT DE MULTIMÉDIA -->
               <div class="periph-group-title">Multimédia e Imagem</div>
-              <label class="periph-label"><input type="checkbox" class="pcam" checked>📷 Câmaras USB / Webcams</label>
-              <label class="periph-label"><input type="checkbox" class="paudio" checked>🎙️ Microfone / Captura Áudio</label>
-              <label class="periph-label"><input type="checkbox" class="psound" checked>🔊 Colunas / Saída de Som</label>
-              <label class="periph-label"><input type="checkbox" class="pvideo">📺 Placas de Captura de Vídeo</label>
-
-              <!-- COMUNICAÇÃO E DISPOSITIVOS FÍSICOS -->
+              <label class="periph-label"><input type="checkbox" class="pcam" checked>📷 Câmaras USB</label>
+              <label class="periph-label"><input type="checkbox" class="paudio" checked>🎙️ Microfone</label>
+              <label class="periph-label"><input type="checkbox" class="psound" checked>🔊 Colunas</label>
+              <label class="periph-label"><input type="checkbox" class="pvideo">📺 Captura Vídeo</label>
               <div class="periph-group-title">Portas Físicas e Barramentos</div>
-              <label class="periph-label"><input type="checkbox" class="pcom" checked>🔌 Portas COM / Série / Arduino</label>
-              <label class="periph-label"><input type="checkbox" class="pusb" checked>🎛️ Dispositivos USB Genéricos</label>
-              <label class="periph-label"><input type="checkbox" class="pblu">📡 Controladores Bluetooth</label>
-              <label class="periph-label"><input type="checkbox" class="pprint">🖨️ Impressoras / Plotters</label>
-
-              <!-- ARMAZENAMENTO E SISTEMA -->
-              <div class="periph-group-title">Armazenamento e Sistema</div>
-              <label class="periph-label"><input type="checkbox" class="pdisk" checked>💾 Discos Rígidos / Pens USB</label>
-              <label class="periph-label"><input type="checkbox" class="pclip" checked>📋 Clipboard (Copy/Paste)</label>
-              <label class="periph-label"><input type="checkbox" class="psmart">🪪 Leitores de Smart Cards / CC</label>
-              <label class="periph-label"><input type="checkbox" class="pnet">🌐 Placas de Rede Adicionais</label>
-
-              <!-- SEGURANÇA E AUTOMAÇÃO (MUITO MAIS!) -->
-              <div class="periph-group-title">Avançado, Segurança e Sensores</div>
-              <label class="periph-label"><input type="checkbox" class="pbiom">☝️ Leitores Biométricos / Impressão</label>
-              <label class="periph-label"><input type="checkbox" class="psens">🌡️ Sensores Termo/Humidade</label>
-              <label class="periph-label"><input type="checkbox" class="pgpu">🎮 Aceleração Gráfica GPU Hardware</label>
-              <label class="periph-label"><input type="checkbox" class="phid">⌨️ Teclados / Ratos Especiais (HID)</label>
+              <label class="periph-label"><input type="checkbox" class="pcom" checked>🔌 Portas COM/Série</label>
+              <label class="periph-label"><input type="checkbox" class="pusb" checked>🎛️ Dispositivos USB</label>
+              <label class="periph-label"><input type="checkbox" class="pdisk" checked>💾 Discos/Pens</label>
+              <label class="periph-label"><input type="checkbox" class="pbiom">☝️ Biometria</label>
             </div>
           </td>
+          <!-- CAIXOTE DO LIXO NA LINHA -->
+          <td><button class="btn-delete" onclick="removerMaquina(this)">🗑️</button></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="network-console">
-    <h3>💻 Consola de Monitorização de Barramento Completo</h3>
+    <h3>💻 Consola de Monitorização de Barramento</h3>
     <div id="terminal-stream">
-      [SISTEMA] Barramento de rede em escuta. Todos os drivers de periféricos (Mapeamento Total) prontos para injeção via IP único...
+      [SISTEMA] Barramento pronto. Escutando alterações na gama 192.168.0.1 - 192.168.1.254...
     </div>
   </div>
 
@@ -200,37 +209,71 @@
       term.scrollTop = term.scrollHeight;
     }
 
-    function mapearTodosPerifericos(linha) {
-      // Coleta o estado de absolutamente todas as checkboxes dinamicamente
-      const lista = [];
-      if (linha.querySelector('.pcam').checked) lista.push("📷 Câmaras USB");
-      if (linha.querySelector('.paudio').checked) lista.push("🎙️ Microfone");
-      if (linha.querySelector('.psound').checked) lista.push("🔊 Saída Áudio");
-      if (linha.querySelector('.pvideo').checked) lista.push("📺 Captura Vídeo");
-      if (linha.querySelector('.pcom').checked) lista.push("🔌 Portas COM/Série");
-      if (linha.querySelector('.pusb').checked) lista.push("🎛️ Barramento USB Raw");
-      if (linha.querySelector('.pblu').checked) lista.push("📡 Bluetooth Host");
-      if (linha.querySelector('.pprint').checked) lista.push("🖨️ Impressoras");
-      if (linha.querySelector('.pdisk').checked) lista.push("💾 Discos Locais");
-      if (linha.querySelector('.pclip').checked) lista.push("📋 Sincronização Clipboard");
-      if (linha.querySelector('.psmart').checked) lista.push("🪪 Smart Cards");
-      if (linha.querySelector('.pnet').checked) lista.push("🌐 Placas de Rede Virtualizadas");
-      if (linha.querySelector('.pbiom').checked) lista.push("☝️ Leitores Biométricos");
-      if (linha.querySelector('.psens').checked) lista.push("🌡️ Sensores IoT Telemetria");
-      if (linha.querySelector('.pgpu').checked) lista.push("🎮 Renderização Remota por GPU");
-      if (linha.querySelector('.phid').checked) lista.push("⌨️ Dispositivos Humanos HID");
-      return lista;
+    // INTERAÇÃO DO BOTÃO MAIS (➕)
+    function adicionarNovaMaquina() {
+      const nome = prompt("Introduza o nome da máquina:", "Posto de Controlo Lab");
+      if (!nome) return;
+      const ip = prompt("Introduza o Endereço IP único (ex: 192.168.0.100):", "192.168.0.100");
+      if (!ip) return;
+
+      const tabela = document.getElementById('tabelaMaquinas').getElementsByTagName('tbody')[0];
+      const novaLinha = tabela.insertRow();
+      novaLinha.setAttribute('data-ip', ip);
+
+      // Substitui pontos para IDs válidos no HTML
+      const idLimpo = ip.replace(/\./g, '');
+
+      novaLinha.innerHTML = `
+        <td><strong>${nome}</strong><br><code>${ip}</code></td>
+        <td><span class="status-badge status-off" id="status-${idLimpo}">🔴 DESLIGADO</span></td>
+        <td>
+          <button class="btn-power btn-wake" onclick="enviarWakeOnLan('${ip}')">🔌 Ligar</button>
+          <button class="btn-power btn-shutdown" onclick="enviarShutdown('${ip}')">🛑 Desligar</button>
+        </td>
+        <td>
+          <div class="peripherals-super-grid">
+            <div class="periph-group-title">Multimédia e Imagem</div>
+            <label class="periph-label"><input type="checkbox" class="pcam" checked>📷 Câmaras USB</label>
+            <label class="periph-label"><input type="checkbox" class="paudio">🎙️ Microfone</label>
+            <label class="periph-label"><input type="checkbox" class="psound">🔊 Colunas</label>
+            <label class="periph-label"><input type="checkbox" class="pvideo">📺 Captura Vídeo</label>
+            <div class="periph-group-title">Portas Físicas e Barramentos</div>
+            <label class="periph-label"><input type="checkbox" class="pcom">🔌 Portas COM/Série</label>
+            <label class="periph-label"><input type="checkbox" class="pusb" checked>🎛️ Dispositivos USB</label>
+            <label class="periph-label"><input type="checkbox" class="pdisk" checked>💾 Discos/Pens</label>
+            <label class="periph-label"><input type="checkbox" class="pbiom">☝️ Biometria</label>
+          </div>
+        </td>
+        <td><button class="btn-delete" onclick="removerMaquina(this)">🗑️</button></td>
+      `;
+
+      printTerminal(`[REDES] Novo nó registado no barramento central IP: ${ip}`, 'sucesso');
     }
 
-    async function enviarWakeOnLan(ip, mac, idMaquina) {
-      const linha = document.querySelector(`tr[data-ip="${ip}"]`);
-      printTerminal(`[WoL] A disparar Magic Packet em modo Broadcast para o endereço físico MAC: ${mac}...`);
+    // INTERAÇÃO DO CAIXOTE DO LIXO (🗑️)
+    function removerMaquina(botao) {
+      const linha = botao.closest('tr');
+      const ip = linha.getAttribute('data-ip');
+      
+      if (confirm(`Tem a certeza que deseja remover e purgar o IP ${ip} da infraestrutura?`)) {
+        linha.remove();
+        printTerminal(`❌ Nó de rede com IP ${ip} foi removido e desconectado da matriz.`, 'erro');
+      }
+    }
+
+    function enviarWakeOnLan(ip) {
+      const idLimpo = ip.replace(/\./g, '');
+      const badge = document.getElementById(`status-${idLimpo}`) || document.getElementById(`status-192168166`);
+      printTerminal(`[WoL] Enviar Magic Packet para o host de destino local ${ip}...`);
       
       setTimeout(() => {
-        printTerminal(`✓ Sinal WoL enviado com sucesso. Aguardando arranque dos barramentos do host...`, 'sucesso');
-        
-        setTimeout(() => {
-          document.getElementById(`status-${idMaquina}`).className = 'status-badge status-on';
-          document.getElementById(`status-${idMaquina}`).innerText = '🟢 LIGADO';
-          printTerminal(`[REDES] Ligação TCP/IP restabelecida com sucesso no host ${ip}!`, 'sucesso');
-          
+        if(badge) {
+          badge.className = 'status-badge status-on';
+          badge.innerText = '🟢 LIGADO';
+        }
+        printTerminal(`✓ Barramento ativo e periféricos mapeados via IP único: ${ip}`, 'sucesso');
+      }, 800);
+    }
+
+    function enviarShutdown(ip) {
+      const idLimpo = ip.replace(/\./g, '');
