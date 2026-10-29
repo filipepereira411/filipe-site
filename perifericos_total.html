@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Global de Periféricos & Redes</title>
+    <title>Gestão Central de Periféricos & Redes IP</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            --bg-color: #0b111e;
+            --card-bg: #141d2e;
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #1e293b;
             --primary: #38bdf8;
-            --primary-hover: #0ea5e9;
-            --success: #4ade80;
-            --warning: #fbbf24;
-            --danger: #f87171;
-            --danger-hover: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --input-bg: #0f172a;
         }
 
         body {
@@ -31,97 +31,70 @@
 
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
         }
 
-        /* Área do Formulário */
-        .form-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .form-input {
-            background: #0f172a;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 6px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .form-input:focus {
-            border-color: var(--primary);
-        }
-
-        /* Cabeçalho da Tabela */
-        .header-area {
+        /* Topo do Painel */
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 16px;
         }
 
-        h2, h3 {
+        h2 {
             margin: 0;
+            font-size: 1.5rem;
             font-weight: 600;
-            letter-spacing: -0.025em;
-        }
-
-        h3 {
-            margin-bottom: 16px;
-            color: var(--primary);
         }
 
         .search-box {
-            background: var(--card-bg);
+            background: var(--input-bg);
             border: 1px solid var(--border-color);
-            padding: 10px 16px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             color: var(--text-main);
             font-size: 0.9rem;
             outline: none;
-            min-width: 300px;
-            transition: 0.2s;
+            width: 250px;
         }
 
-        .search-box:focus {
-            border-color: var(--primary);
+        /* Formulário de Adicionar */
+        .add-form-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
 
-        /* Estrutura da Tabela */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) 100px;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .form-input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Tabela */
         .table-responsive {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         table {
@@ -131,15 +104,16 @@
         }
 
         th, td {
-            padding: 16px 20px;
+            padding: 14px 20px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            vertical-align: middle;
         }
 
         th {
-            background-color: #111827;
+            background-color: #0f172a;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 700;
@@ -149,117 +123,113 @@
             border-bottom: none;
         }
 
-        tr {
-            transition: background-color 0.2s;
-        }
-
-        tr:hover {
-            background-color: #24334d;
-        }
-
-        .ip-badge {
+        /* Estilos Internos das Células */
+        .ip-link {
+            color: #3b82f6;
+            text-decoration: none;
             font-family: monospace;
-            background: #0f172a;
-            padding: 4px 8px;
-            border-radius: 4px;
-            color: var(--primary);
-            border: 1px solid #1e293b;
         }
 
         .status-dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             margin-right: 8px;
+            vertical-align: middle;
         }
 
-        .status-online { background-color: var(--success); }
-        .status-offline { background-color: var(--danger); }
+        .dot-online { background-color: var(--success); }
+        .dot-offline { background-color: var(--danger); }
+
+        /* Barras de Diagnóstico */
+        .progress-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bg {
+            background: #1e293b;
+            border-radius: 4px;
+            width: 80px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
 
         /* Botões */
-        .btn {
-            padding: 10px 16px;
+        .btn-add {
+            background: #2563eb;
+            color: white;
             border: none;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
             font-weight: 600;
-            transition: 0.2s;
+            font-size: 0.85rem;
+            width: 100%;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: #0f172a;
-        }
+        .btn-add:hover { background: #1d4ed8; }
 
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-action {
-            background: #334155;
-            color: var(--text-main);
+        .btn-control {
+            background: #2e3b4e;
+            color: #cbd5e1;
             border: none;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: 0.2s;
             margin-right: 4px;
         }
 
-        .btn-action:hover {
-            background: var(--primary);
-            color: #0f172a;
-        }
+        .btn-control:hover { background: #3d4f68; }
 
-        .btn-danger {
-            background: #334155;
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
             color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
         }
 
-        .btn-danger:hover {
-            background: var(--danger-hover);
-            color: #f8fafc;
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Novo Bloco: Formulário para Adicionar Dispositivos -->
-    <div class="form-card">
-        <h3>Adicionar Novo Periférico / Dispositivo</h3>
-        <form id="formDispositivo" onsubmit="adicionarDispositivo(event)">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="nome">Nome do Periférico</label>
-                    <input type="text" id="nome" class="form-input" placeholder="Ex: Rato Logitech, Ecrã IPS 24" required>
-                </div>
-                <div class="form-group">
-                    <label for="categoria">Categoria</label>
-                    <input type="text" id="categoria" class="form-input" placeholder="Ex: Entrada, Saída, Ecrã" required>
-                </div>
-                <div class="form-group">
-                    <label for="ip">Endereço IP ou Conexão</label>
-                    <input type="text" id="ip" class="form-input" placeholder="Ex: 192.168.1.90 ou USB" required>
-                </div>
-                <div class="form-group">
-                    <label for="metrica">Métrica / Estado</label>
-                    <input type="text" id="metrica" class="form-input" placeholder="Ex: Ativo, 100% sRGB, 80% Bat." required>
-                </div>
-                <button type="submit" class="btn btn-primary">Adicionar</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Tabela e Filtros -->
-    <div class="header-area">
+    
+    <!-- Barra Superior -->
+    <div class="top-bar">
         <h2>Gestão Central de Periféricos & Redes IP</h2>
         <input type="text" id="filtroGlobal" class="search-box" placeholder="Filtrar por nome, IP, categoria..." onkeyup="filtrarTabela()">
     </div>
+
+    <!-- Formulário Dinâmico (+) -->
+    <div class="add-form-container">
+        <form id="formAdicionar" onsubmit="adicionarItem(event)">
+            <div class="form-grid">
+                <input type="text" id="addNome" class="form-input" placeholder="Periférico / Dispositivo" required>
+                <input type="text" id="addCategoria" class="form-input" placeholder="Tipo / Categoria" required>
+                <input type="text" id="addIP" class="form-input" placeholder="Endereço IP ou Conexão" required>
+                <input type="text" id="addMetrica" class="form-input" placeholder="Métrica (Ex: 100% sRGB ou Ativo)" required>
+                <button type="submit" class="btn-add">+ Adicionar</button>
+            </div>
+        </form>
+    </div>
     
+    <!-- Tabela Baseada na Imagem -->
     <div class="table-responsive">
         <table id="tabelaGlobal">
             <thead>
@@ -272,46 +242,56 @@
                 </tr>
             </thead>
             <tbody id="corpoTabela">
-                <!-- Dispositivos Iniciais -->
                 <tr>
                     <td><strong>Monitor IPS Pro 32"</strong></td>
                     <td>Ecrã / Saída</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.50</span></td>
-                    <td>100% sRGB</td>
+                    <td><span class="status-dot dot-online"></span><a href="#" class="ip-link">192.168.1.50</a></td>
                     <td>
-                        <button class="btn-action" onclick="acederIP('192.168.1.50')">Entrar</button>
-                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
+                        <div class="progress-container">
+                            <div class="progress-bg"><div class="progress-fill" style="width: 100%; background-color: var(--success);"></div></div>
+                            <span>100% sRGB</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn-control" onclick="alert('A aceder ao Painel Web...')">Painel Web</button>
+                        <button class="btn-delete" onclick="eliminarLinha(this)">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Monitor Gaming IPS 27"</strong></td>
+                    <td>Ecrã / Saída</td>
+                    <td><span class="status-dot dot-online"></span><a href="#" class="ip-link">192.168.1.51</a></td>
+                    <td>144Hz / Ativo</td>
+                    <td>
+                        <button class="btn-control" onclick="alert('A aceder ao Painel Web...')">Painel Web</button>
+                        <button class="btn-delete" onclick="eliminarLinha(this)">Eliminar</button>
                     </td>
                 </tr>
                 <tr>
                     <td><strong>Rato Sem Fios RGB</strong></td>
                     <td>Entrada (Input)</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">Bluetooth</span></td>
-                    <td>72% Bat.</td>
+                    <td><span class="status-dot dot-online"></span><a href="#" class="ip-link">Bluetooth</a></td>
                     <td>
-                        <button class="btn-action" onclick="alert('Configurações locais')">Definições</button>
-                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
+                        <div class="progress-container">
+                            <div class="progress-bg"><div class="progress-fill" style="width: 72%; background-color: var(--success);"></div></div>
+                            <span>72% Bat.</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn-control" onclick="alert('A desligar dispositivo...')">Desligar</button>
+                        <button class="btn-delete" onclick="eliminarLinha(this)">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Teclado Mecânico USB</strong></td>
+                    <td>Entrada (Input)</td>
+                    <td><span class="status-dot dot-online"></span><a href="#" class="ip-link">Cabo Local</a></td>
+                    <td>Alimentado</td>
+                    <td>
+                        <button class="btn-control" onclick="alert('A desligar dispositivo...')">Desligar</button>
+                        <button class="btn-delete" onclick="eliminarLinha(this)">Eliminar</button>
                     </td>
                 </tr>
                 <tr>
                     <td><strong>Servidor NAS (Discos IPS)</strong></td>
                     <td>Armazenamento</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.100</span></td>
-                    <td>35% Livre</td>
-                    <td>
-                        <button class="btn-action" onclick="acederIP('192.168.1.100')">Entrar</button>
-                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<script>
-    // 1. Função para ADICIONAR uma nova linha na tabela dinamicamente
-    function adicionarDispositivo(event) {
-        event.preventDefault(); // Impede a página de recarregar ao submeter o formulário
-
-        // Capturar valores dos campos do formulário
-        const nome = document.getElementById("nome").value;
