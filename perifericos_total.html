@@ -12,9 +12,11 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
             --success: #4ade80;
             --warning: #fbbf24;
             --danger: #f87171;
+            --danger-hover: #ef4444;
         }
 
         body {
@@ -32,19 +34,69 @@
             max-width: 1200px;
         }
 
+        /* Área do Formulário */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .form-input {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Cabeçalho da Tabela */
         .header-area {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 16px;
         }
 
-        h2 {
+        h2, h3 {
             margin: 0;
             font-weight: 600;
             letter-spacing: -0.025em;
+        }
+
+        h3 {
+            margin-bottom: 16px;
+            color: var(--primary);
         }
 
         .search-box {
@@ -61,9 +113,9 @@
 
         .search-box:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
         }
 
+        /* Estrutura da Tabela */
         .table-responsive {
             background: var(--card-bg);
             border-radius: 12px;
@@ -105,7 +157,6 @@
             background-color: #24334d;
         }
 
-        /* Código IP / Link */
         .ip-badge {
             font-family: monospace;
             background: #0f172a;
@@ -115,7 +166,6 @@
             border: 1px solid #1e293b;
         }
 
-        /* Estado */
         .status-dot {
             display: inline-block;
             width: 8px;
@@ -127,24 +177,26 @@
         .status-online { background-color: var(--success); }
         .status-offline { background-color: var(--danger); }
 
-        /* Barras de Diagnóstico */
-        .progress-bar-bg {
-            background: #334155;
-            border-radius: 4px;
-            width: 80px;
-            height: 6px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
-            overflow: hidden;
+        /* Botões */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.2s;
         }
 
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
+        .btn-primary {
+            background: var(--primary);
+            color: #0f172a;
         }
 
-        /* Botões de Ação */
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
         .btn-action {
             background: #334155;
             color: var(--text-main);
@@ -154,7 +206,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             transition: 0.2s;
-            font-weight: 500;
+            margin-right: 4px;
         }
 
         .btn-action:hover {
@@ -162,15 +214,47 @@
             color: #0f172a;
         }
 
-        .btn-danger-action:hover {
-            background: var(--danger);
-            color: #0f172a;
+        .btn-danger {
+            background: #334155;
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+            color: #f8fafc;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Novo Bloco: Formulário para Adicionar Dispositivos -->
+    <div class="form-card">
+        <h3>Adicionar Novo Periférico / Dispositivo</h3>
+        <form id="formDispositivo" onsubmit="adicionarDispositivo(event)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nome">Nome do Periférico</label>
+                    <input type="text" id="nome" class="form-input" placeholder="Ex: Rato Logitech, Ecrã IPS 24" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoria</label>
+                    <input type="text" id="categoria" class="form-input" placeholder="Ex: Entrada, Saída, Ecrã" required>
+                </div>
+                <div class="form-group">
+                    <label for="ip">Endereço IP ou Conexão</label>
+                    <input type="text" id="ip" class="form-input" placeholder="Ex: 192.168.1.90 ou USB" required>
+                </div>
+                <div class="form-group">
+                    <label for="metrica">Métrica / Estado</label>
+                    <input type="text" id="metrica" class="form-input" placeholder="Ex: Ativo, 100% sRGB, 80% Bat." required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabela e Filtros -->
     <div class="header-area">
         <h2>Gestão Central de Periféricos & Redes IP</h2>
         <input type="text" id="filtroGlobal" class="search-box" placeholder="Filtrar por nome, IP, categoria..." onkeyup="filtrarTabela()">
@@ -187,68 +271,37 @@
                     <th>Ações de Controlo</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Monitores IPS -->
+            <tbody id="corpoTabela">
+                <!-- Dispositivos Iniciais -->
                 <tr>
                     <td><strong>Monitor IPS Pro 32"</strong></td>
                     <td>Ecrã / Saída</td>
                     <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.50</span></td>
+                    <td>100% sRGB</td>
                     <td>
-                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 100%; background-color: var(--success);"></div></div>
-                        100% sRGB
+                        <button class="btn-action" onclick="acederIP('192.168.1.50')">Entrar</button>
+                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
                     </td>
-                    <td><button class="btn-action" onclick="acederIP('192.168.1.50', '80')">Painel Web</button></td>
                 </tr>
-                <tr>
-                    <td><strong>Monitor Gaming IPS 27"</strong></td>
-                    <td>Ecrã / Saída</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.51</span></td>
-                    <td>144Hz / Ativo</td>
-                    <td><button class="btn-action" onclick="acederIP('192.168.1.51', '80')">Painel Web</button></td>
-                </tr>
-                <!-- Periféricos de Entrada -->
                 <tr>
                     <td><strong>Rato Sem Fios RGB</strong></td>
                     <td>Entrada (Input)</td>
                     <td><span class="status-dot status-online"></span><span class="ip-badge">Bluetooth</span></td>
+                    <td>72% Bat.</td>
                     <td>
-                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 72%; background-color: var(--success);"></div></div>
-                        72% Bat.
+                        <button class="btn-action" onclick="alert('Configurações locais')">Definições</button>
+                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
                     </td>
-                    <td><button class="btn-action btn-danger-action" onclick="removerDispositivo(this)">Desligar</button></td>
                 </tr>
-                <tr>
-                    <td><strong>Teclado Mecânico USB</strong></td>
-                    <td>Entrada (Input)</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">Cabo Local</span></td>
-                    <td>Alimentado</td>
-                    <td><button class="btn-action btn-danger-action" onclick="removerDispositivo(this)">Desligar</button></td>
-                </tr>
-                <!-- Armazenamento / Infraestrutura -->
                 <tr>
                     <td><strong>Servidor NAS (Discos IPS)</strong></td>
                     <td>Armazenamento</td>
                     <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.100</span></td>
+                    <td>35% Livre</td>
                     <td>
-                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 35%; background-color: var(--warning);"></div></div>
-                        35% Livre
+                        <button class="btn-action" onclick="acederIP('192.168.1.100')">Entrar</button>
+                        <button class="btn-action btn-danger" onclick="removerLinha(this)">Remover</button>
                     </td>
-                    <td><button class="btn-action" onclick="acederIP('192.168.1.100', '443')">Entrar (SSH)</button></td>
-                </tr>
-                <tr>
-                    <td><strong>Impressora 3D Escritório</strong></td>
-                    <td>Híbrido (E/S)</td>
-                    <td><span class="status-dot status-online"></span><span class="ip-badge">192.168.1.85</span></td>
-                    <td>Pronta</td>
-                    <td><button class="btn-action" onclick="acederIP('192.168.1.85', '8080')">OctoPrint</button></td>
-                </tr>
-                <!-- Dispositivo Offline -->
-                <tr>
-                    <td><strong>Câmara de Segurança IPS</strong></td>
-                    <td>Câmara / Entrada</td>
-                    <td><span class="status-dot status-offline"></span><span class="ip-badge">192.168.1.200</span></td>
-                    <td><span style="color: var(--danger)">Inativo</span></td>
-                    <td><button class="btn-action" style="opacity: 0.4; cursor: not-allowed;" disabled>Indisponível</button></td>
                 </tr>
             </tbody>
         </table>
@@ -256,28 +309,9 @@
 </div>
 
 <script>
-    // Filtro global em tempo real (Pesquisa em qualquer coluna)
-    function filtrarTabela() {
-        const input = document.getElementById("filtroGlobal");
-        const filter = input.value.toLowerCase();
-        const table = document.getElementById("tabelaGlobal");
-        const tr = table.getElementsByTagName("tr");
+    // 1. Função para ADICIONAR uma nova linha na tabela dinamicamente
+    function adicionarDispositivo(event) {
+        event.preventDefault(); // Impede a página de recarregar ao submeter o formulário
 
-        for (let i = 1; i < tr.length; i++) {
-            let rowText = tr[i].innerText.toLowerCase();
-            if (rowText.indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-
-    // Alerta simulando a entrada num dispositivo via IP e Porta
-    function acederIP(ip, porta) {
-        alert(`A abrir ligação de rede...\nDestino: http://${ip}:${porta}\n\nCertifique-se de que está na mesma rede local (Wi-Fi/Cabo) para efetuar o login.`);
-    }
-
-    // Ação para desligar periféricos locais
-    function removerDispositivo(botao) {
-        const linha = botao.closest('tr');
+        // Capturar valores dos campos do formulário
+        const nome = document.getElementById("nome").value;
