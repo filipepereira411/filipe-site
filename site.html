@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filipe | Gestão Total por IP Único (PAP)</title>
+  <title>Filipe | Gestão Suprema de Periféricos & Energia (PAP)</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,7 +16,7 @@
       align-items: center;
     }
     .panel {
-      max-width: 1300px;
+      max-width: 1400px;
       width: 100%;
       background: white;
       padding: 30px;
@@ -44,81 +44,68 @@
       font-weight: 600;
     }
     
-    .status-toggle {
-      cursor: pointer;
-      border: none;
-      padding: 8px 14px;
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: bold;
       text-transform: uppercase;
-      min-width: 105px;
     }
     .status-on { background: #e6f4ea; color: #137333; }
     .status-off { background: #fce8e6; color: #c5221f; }
     
-    .peripherals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-    .periph-label {
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .btn-connect {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: #0070f3;
-      color: white;
-      padding: 10px 18px;
+    .btn-power {
+      padding: 8px 12px;
+      border: none;
       border-radius: 6px;
       font-weight: bold;
-      font-size: 13px;
-      border: none;
+      font-size: 12px;
       cursor: pointer;
+      margin-right: 5px;
+      transition: background 0.2s;
     }
-    .btn-connect:hover { background-color: #0051b3; }
+    .btn-wake { background-color: #34a853; color: white; }
+    .btn-wake:hover { background-color: #2d8e47; }
+    .btn-shutdown { background-color: #ea4335; color: white; }
+    .btn-shutdown:hover { background-color: #d23225; }
 
-    /* ÁREA DE COMUNICAÇÃO DE REDE POR IP */
+    /* Nova Grelha Suprema de Periféricos Agrupados */
+    .peripherals-super-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 0;
+    }
+    .periph-group-title {
+      grid-column: span 4;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #888;
+      font-weight: bold;
+      margin-top: 8px;
+      border-bottom: 1px dashed #ddd;
+      padding-bottom: 2px;
+    }
+    .periph-label {
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .periph-checkbox { cursor: pointer; margin: 0; }
+    
     .network-console {
-      max-width: 1300px;
+      max-width: 1400px;
       width: 100%;
       background: #111;
       color: #fff;
       border-radius: 12px;
       padding: 25px;
       box-shadow: 0 6px 30px rgba(0,0,0,0.15);
-      display: none;
     }
-    .console-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    .endpoint-box, .terminal-box {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 20px;
-    }
-    .btn-action {
-      background: #222;
-      color: white;
-      border: 1px solid #444;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-      margin-right: 5px;
-    }
-    .btn-action:hover { background: #0070f3; border-color: #0070f3; }
-    
     #terminal-stream {
       background: #000;
       padding: 15px;
@@ -126,113 +113,86 @@
       font-family: 'Courier New', Courier, monospace;
       font-size: 13px;
       color: #00ff00;
-      height: 250px;
+      height: 220px;
       overflow-y: auto;
       border: 1px solid #222;
     }
-    .ip-badge {
-      background: #333;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      color: #ffca28;
-    }
+    .sucesso { color: #00ff00; font-weight: bold; }
+    .alerta { color: #ffca28; }
+    .erro { color: #ff4a4a; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div class="panel">
-    <h1>Controlo de Infraestrutura por IP Único (Gama 192.168.0.1 - 192.168.1.254)</h1>
-    <p>Painel centralizado de comunicação de rede. Dispare comandos de hardware diretamente para as APIs dos nós remotos.</p>
+    <h1>Matriz Suprema de Barramento — Gestão Absoluta de Periféricos (Gama 192.168.0.1 - 192.168.1.254)</h1>
+    <p>Ligue/desligue hosts remotos na rede e interfile o mapeamento granular de todo e qualquer hardware detetável através de sinal assíncrono.</p>
     
     <table class="rdp-table">
       <thead>
         <tr>
-          <th>Nó / Máquina</th>
-          <th>Endereço IP Local</th>
-          <th>Estado da Rede</th>
-          <th>Mapeamento de Periféricos por IP</th>
-          <th>Ação</th>
+          <th style="width: 180px;">Nó / IP</th>
+          <th style="width: 130px;">Estado Físico</th>
+          <th style="width: 240px;">Gestão de Energia Remota</th>
+          <th>Controlo Total e Mapeamento de Periféricos (TODOS)</th>
         </tr>
       </thead>
       <tbody>
-        <tr data-ip="192.168.1.66" data-name="Servidor Câmara Principal (1)">
-          <td><strong>Servidor Câmara Principal (1)</strong></td>
-          <td><code>192.168.1.66</code></td>
-          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 ATIVO</button></td>
+        <!-- MÁQUINA ÚNICA COM TODOS OS PERIFÉRICOS POSSÍVEIS MUNDO -->
+        <tr data-ip="192.168.1.66" data-mac="00:1A:2B:3C:4D:5E" data-name="Servidor Central">
           <td>
-            <div class="peripherals-grid">
-              <label class="periph-label"><input type="checkbox" class="camara" checked>📷 Stream Câmara</label>
-              <label class="periph-label"><input type="checkbox" class="audio" checked>🎙️ Sistema Áudio</label>
-              <label class="periph-label"><input type="checkbox" class="discos" checked>💾 Mapear Armazenamento</label>
+            <strong>Servidor Central (1)</strong><br>
+            <code>192.168.1.66</code>
+          </td>
+          <td><span class="status-badge status-on" id="status-1">🟢 LIGADO</span></td>
+          <td>
+            <button class="btn-power btn-wake" onclick="enviarWakeOnLan('192.168.1.66', '00:1A:2B:3C:4D:5E', 1)">🔌 Ligar (WoL)</button>
+            <button class="btn-power btn-shutdown" onclick="enviarShutdown('192.168.1.66', 1)">🛑 Desligar</button>
+          </td>
+          <td>
+            <div class="peripherals-super-grid">
+              <!-- MENT DE MULTIMÉDIA -->
+              <div class="periph-group-title">Multimédia e Imagem</div>
+              <label class="periph-label"><input type="checkbox" class="pcam" checked>📷 Câmaras USB / Webcams</label>
+              <label class="periph-label"><input type="checkbox" class="paudio" checked>🎙️ Microfone / Captura Áudio</label>
+              <label class="periph-label"><input type="checkbox" class="psound" checked>🔊 Colunas / Saída de Som</label>
+              <label class="periph-label"><input type="checkbox" class="pvideo">📺 Placas de Captura de Vídeo</label>
+
+              <!-- COMUNICAÇÃO E DISPOSITIVOS FÍSICOS -->
+              <div class="periph-group-title">Portas Físicas e Barramentos</div>
+              <label class="periph-label"><input type="checkbox" class="pcom" checked>🔌 Portas COM / Série / Arduino</label>
+              <label class="periph-label"><input type="checkbox" class="pusb" checked>🎛️ Dispositivos USB Genéricos</label>
+              <label class="periph-label"><input type="checkbox" class="pblu">📡 Controladores Bluetooth</label>
+              <label class="periph-label"><input type="checkbox" class="pprint">🖨️ Impressoras / Plotters</label>
+
+              <!-- ARMAZENAMENTO E SISTEMA -->
+              <div class="periph-group-title">Armazenamento e Sistema</div>
+              <label class="periph-label"><input type="checkbox" class="pdisk" checked>💾 Discos Rígidos / Pens USB</label>
+              <label class="periph-label"><input type="checkbox" class="pclip" checked>📋 Clipboard (Copy/Paste)</label>
+              <label class="periph-label"><input type="checkbox" class="psmart">🪪 Leitores de Smart Cards / CC</label>
+              <label class="periph-label"><input type="checkbox" class="pnet">🌐 Placas de Rede Adicionais</label>
+
+              <!-- SEGURANÇA E AUTOMAÇÃO (MUITO MAIS!) -->
+              <div class="periph-group-title">Avançado, Segurança e Sensores</div>
+              <label class="periph-label"><input type="checkbox" class="pbiom">☝️ Leitores Biométricos / Impressão</label>
+              <label class="periph-label"><input type="checkbox" class="psens">🌡️ Sensores Termo/Humidade</label>
+              <label class="periph-label"><input type="checkbox" class="pgpu">🎮 Aceleração Gráfica GPU Hardware</label>
+              <label class="periph-label"><input type="checkbox" class="phid">⌨️ Teclados / Ratos Especiais (HID)</label>
             </div>
           </td>
-          <td><button class="btn-connect" onclick="conectarAoIP(this)">🔌 Iniciar Conexão IP</button></td>
-        </tr>
-        
-        <tr data-ip="192.168.0.100" data-name="Posto de Controlo Lab (2)">
-          <td><strong>Posto de Controlo Lab (2)</strong></td>
-          <td><code>192.168.0.100</code></td>
-          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 ATIVO</button></td>
-          <td>
-            <div class="peripherals-grid">
-              <label class="periph-label"><input type="checkbox" class="camara" checked>📷 Stream Câmara</label>
-              <label class="periph-label"><input type="checkbox" class="audio">🎙️ Sistema Áudio</label>
-              <label class="periph-label"><input type="checkbox" class="discos" checked>💾 Mapear Armazenamento</label>
-            </div>
-          </td>
-          <td><button class="btn-connect" onclick="conectarAoIP(this)">🔌 Iniciar Conexão IP</button></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- CONSOLE REAL DE GERENCIAMENTO POR SOCKET / HTTP -->
-  <div class="network-console" id="networkConsole">
-    <h2>Canal de Comunicação Direto: <span id="targetNome" style="color:#0070f3;">-</span></h2>
-    <p>A enviar tráfego para a gateway através do IP: <span class="ip-badge" id="targetIP">0.0.0.0</span></p>
-    
-    <div class="console-grid">
-      <!-- TERMINAL DE LOGS E EVENTOS DE REDE REAL -->
-      <div class="terminal-box">
-        <h3>💻 Terminal de Eventos HTTP / WebSocket</h3>
-        <div id="terminal-stream">
-          Aguardando comandos de hardware...
-        </div>
-      </div>
-
-      <!-- PAINEL DE CONTROLO DE SINAIS DO HARDWARE -->
-      <div class="endpoint-box">
-        <h3>⚡ Centro de Sinais do Host</h3>
-        <p style="font-size:13px; color:#aaa;">Execute rotinas remotas no computador alvo via requisições de rede assíncronas.</p>
-        
-        <button class="btn-action" onclick="enviarComandoRede('LIGAR_PERIFERICOS')">⚙️ Forçar Inicialização</button>
-        <button class="btn-action" onclick="enviarComandoRede('REBOOT_SISTEMA')">🔄 Reiniciar Nó</button>
-        <button class="btn-action" onclick="enviarComandoRede('DESLIGAR_HARDWARE')" style="color: #ff4a4a;">🛑 Desativar Barramento</button>
-      </div>
+  <div class="network-console">
+    <h3>💻 Consola de Monitorização de Barramento Completo</h3>
+    <div id="terminal-stream">
+      [SISTEMA] Barramento de rede em escuta. Todos os drivers de periféricos (Mapeamento Total) prontos para injeção via IP único...
     </div>
   </div>
 
   <script>
-    let ipAtualXdfilipe = "";
-
-    function togglePower(botao) {
-      const linha = botao.closest('tr');
-      const btn = linha.querySelector('.btn-connect');
-      if (botao.classList.contains('status-on')) {
-        botao.classList.remove('status-on');
-        botao.classList.add('status-off');
-        botao.innerHTML = '🔴 INATIVO';
-        btn.disabled = true;
-        document.getElementById('networkConsole').style.display = 'none';
-      } else {
-        botao.classList.remove('status-off');
-        botao.classList.add('status-on');
-        botao.innerHTML = '🟢 ATIVO';
-        btn.disabled = false;
-      }
-    }
-
     function printTerminal(txt, classe = '') {
       const term = document.getElementById('terminal-stream');
       const timestamp = new Date().toLocaleTimeString();
@@ -240,48 +200,37 @@
       term.scrollTop = term.scrollHeight;
     }
 
-    // DISPARA A LIGAÇÃO AO IP SELECIONADO DA GAMA
-    function conectarAoIP(botao) {
-      const linha = botao.closest('tr');
-      const nome = linha.getAttribute('data-name');
-      ipAtualXdfilipe = linha.getAttribute('data-ip');
-      
-      document.getElementById('targetNome').innerText = nome;
-      document.getElementById('targetIP').innerText = ipAtualXdfilipe;
-      document.getElementById('networkConsole').style.display = 'block';
-      document.getElementById('networkConsole').scrollIntoView({ behavior: 'smooth' });
-
-      printTerminal(`A iniciar handshake TCP/IP com o host ${ipAtualXdfilipe}...`);
-      printTerminal(`A verificar canais de hardware ativos para Câmara e Armazenamento...`);
-      
-      // Simulação estruturada de conexão bem sucedida à API local (ex: rodando Node.js/Python na máquina alvo)
-      setTimeout(() => {
-        printTerminal(`✓ Ligação estabelecida com sucesso com o barramento do IP ${ipAtualXdfilipe}!`, 'sucesso');
-      }, 800);
+    function mapearTodosPerifericos(linha) {
+      // Coleta o estado de absolutamente todas as checkboxes dinamicamente
+      const lista = [];
+      if (linha.querySelector('.pcam').checked) lista.push("📷 Câmaras USB");
+      if (linha.querySelector('.paudio').checked) lista.push("🎙️ Microfone");
+      if (linha.querySelector('.psound').checked) lista.push("🔊 Saída Áudio");
+      if (linha.querySelector('.pvideo').checked) lista.push("📺 Captura Vídeo");
+      if (linha.querySelector('.pcom').checked) lista.push("🔌 Portas COM/Série");
+      if (linha.querySelector('.pusb').checked) lista.push("🎛️ Barramento USB Raw");
+      if (linha.querySelector('.pblu').checked) lista.push("📡 Bluetooth Host");
+      if (linha.querySelector('.pprint').checked) lista.push("🖨️ Impressoras");
+      if (linha.querySelector('.pdisk').checked) lista.push("💾 Discos Locais");
+      if (linha.querySelector('.pclip').checked) lista.push("📋 Sincronização Clipboard");
+      if (linha.querySelector('.psmart').checked) lista.push("🪪 Smart Cards");
+      if (linha.querySelector('.pnet').checked) lista.push("🌐 Placas de Rede Virtualizadas");
+      if (linha.querySelector('.pbiom').checked) lista.push("☝️ Leitores Biométricos");
+      if (linha.querySelector('.psens').checked) lista.push("🌡️ Sensores IoT Telemetria");
+      if (linha.querySelector('.pgpu').checked) lista.push("🎮 Renderização Remota por GPU");
+      if (linha.querySelector('.phid').checked) lista.push("⌨️ Dispositivos Humanos HID");
+      return lista;
     }
 
-    // ENTRADA REAL DE DADOS: Envia um pedido HTTP POST / GET real para o IP único da máquina
-    async function enviarComandoRede(tipoComando) {
-      if (!ipAtualXdfilipe) return;
-
-      printTerminal(`A enviar pacote HTTP POST para http://${ipAtualXdfilipe}:8080/api/hardware...`);
-      printTerminal(`Conteúdo do pedido: { comando: "${tipoComando}" }`);
-
-      /* 
-      // Código de Produção Real para a tua infraestrutura:
-      try {
-        const resposta = await fetch(`http://${ipAtualXdfilipe}:8080/api/hardware`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ comando: tipoComando })
-        });
-        const dados = await resposta.json();
-        printTerminal(`[RESPOSTA] Host respondeu: ${dados.status}`);
-      } catch (err) {
-        printTerminal(`[ERRO] Falha de comunicação: ${err.message}`, 'erro');
-      }
-      */
-
-      // Mock visual em tempo real para a tua apresentação da PAP:
+    async function enviarWakeOnLan(ip, mac, idMaquina) {
+      const linha = document.querySelector(`tr[data-ip="${ip}"]`);
+      printTerminal(`[WoL] A disparar Magic Packet em modo Broadcast para o endereço físico MAC: ${mac}...`);
+      
       setTimeout(() => {
-        if (tipoComando === 'LIGAR_PERIFERICOS') {
+        printTerminal(`✓ Sinal WoL enviado com sucesso. Aguardando arranque dos barramentos do host...`, 'sucesso');
+        
+        setTimeout(() => {
+          document.getElementById(`status-${idMaquina}`).className = 'status-badge status-on';
+          document.getElementById(`status-${idMaquina}`).innerText = '🟢 LIGADO';
+          printTerminal(`[REDES] Ligação TCP/IP restabelecida com sucesso no host ${ip}!`, 'sucesso');
+          
