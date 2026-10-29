@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filipe | Gestão Total de Periféricos RDP</title>
+  <title>Filipe | Gestão Total por IP Único (PAP)</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,7 +12,8 @@
       margin: 0;
       padding: 40px 20px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
     .panel {
       max-width: 1300px;
@@ -21,6 +22,7 @@
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
     }
     h1 { color: #0070f3; margin-top: 0; font-size: 24px; }
     p { color: #666; margin-bottom: 25px; }
@@ -41,9 +43,7 @@
       color: #555;
       font-weight: 600;
     }
-    .rdp-table tr:hover { background-color: #fcfcfc; }
     
-    /* Botões de Energia */
     .status-toggle {
       cursor: pointer;
       border: none;
@@ -51,14 +51,12 @@
       border-radius: 20px;
       font-size: 11px;
       font-weight: bold;
-      transition: all 0.2s ease;
       text-transform: uppercase;
       min-width: 105px;
     }
     .status-on { background: #e6f4ea; color: #137333; }
     .status-off { background: #fce8e6; color: #c5221f; }
     
-    /* Grelha de Periféricos */
     .peripherals-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -69,14 +67,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      user-select: none;
     }
-    .periph-checkbox {
-      cursor: pointer;
-      margin: 0;
-    }
-
+    
     .btn-connect {
       display: inline-flex;
       align-items: center;
@@ -85,148 +77,211 @@
       color: white;
       padding: 10px 18px;
       border-radius: 6px;
-      text-decoration: none;
       font-weight: bold;
       font-size: 13px;
       border: none;
       cursor: pointer;
-      transition: background 0.2s;
-      white-space: nowrap;
     }
     .btn-connect:hover { background-color: #0051b3; }
-    .btn-connect:disabled { background-color: #ccc; cursor: not-allowed; }
+
+    /* ÁREA DE COMUNICAÇÃO DE REDE POR IP */
+    .network-console {
+      max-width: 1300px;
+      width: 100%;
+      background: #111;
+      color: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+      display: none;
+    }
+    .console-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .endpoint-box, .terminal-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .btn-action {
+      background: #222;
+      color: white;
+      border: 1px solid #444;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-right: 5px;
+    }
+    .btn-action:hover { background: #0070f3; border-color: #0070f3; }
+    
+    #terminal-stream {
+      background: #000;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      color: #00ff00;
+      height: 250px;
+      overflow-y: auto;
+      border: 1px solid #222;
+    }
+    .ip-badge {
+      background: #333;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #ffca28;
+    }
   </style>
 </head>
 <body>
 
   <div class="panel">
-    <h1>Painel de Gestão Total de Periféricos & Energia (PAP)</h1>
-    <p>Controle o estado de energia das máquinas e faça o mapeamento granular de todo o hardware do cliente para o host remoto em tempo real.</p>
+    <h1>Controlo de Infraestrutura por IP Único (Gama 192.168.0.1 - 192.168.1.254)</h1>
+    <p>Painel centralizado de comunicação de rede. Dispare comandos de hardware diretamente para as APIs dos nós remotos.</p>
     
     <table class="rdp-table">
       <thead>
         <tr>
-          <th>Máquina</th>
-          <th>Endereço IP</th>
-          <th>Energia</th>
-          <th>Controlo Total de Periféricos (Mapeamento Web)</th>
+          <th>Nó / Máquina</th>
+          <th>Endereço IP Local</th>
+          <th>Estado da Rede</th>
+          <th>Mapeamento de Periféricos por IP</th>
           <th>Ação</th>
         </tr>
       </thead>
       <tbody>
-        <!-- MÁQUINA 1 -->
-        <tr data-ip="192.168.1.66" data-name="Maquina_1">
+        <tr data-ip="192.168.1.66" data-name="Servidor Câmara Principal (1)">
           <td><strong>Servidor Câmara Principal (1)</strong></td>
           <td><code>192.168.1.66</code></td>
-          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 LIGADO</button></td>
+          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 ATIVO</button></td>
           <td>
             <div class="peripherals-grid">
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox camara" checked>📷 Câmara USB</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox audio" checked>🎙️ Áudio/Microfone</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox discos">💾 Discos Locais</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox comports" checked>🔌 Portas COM/Série</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox clipboard" checked>📋 Clipboard (Copy/Paste)</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox printers">🖨️ Impressoras</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox smartcards">🪪 Smart Cards</label>
+              <label class="periph-label"><input type="checkbox" class="camara" checked>📷 Stream Câmara</label>
+              <label class="periph-label"><input type="checkbox" class="audio" checked>🎙️ Sistema Áudio</label>
+              <label class="periph-label"><input type="checkbox" class="discos" checked>💾 Mapear Armazenamento</label>
             </div>
           </td>
-          <td><button class="btn-connect" onclick="gerarEBaixarRDP(this)">🖥️ Lançar RDP</button></td>
+          <td><button class="btn-connect" onclick="conectarAoIP(this)">🔌 Iniciar Conexão IP</button></td>
         </tr>
-
-        <!-- MÁQUINA 2 -->
-        <tr data-ip="192.168.0.100" data-gateway="192.168.0.1" data-name="Maquina_2">
+        
+        <tr data-ip="192.168.0.100" data-name="Posto de Controlo Lab (2)">
           <td><strong>Posto de Controlo Lab (2)</strong></td>
           <td><code>192.168.0.100</code></td>
-          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 LIGADO</button></td>
+          <td><button class="status-toggle status-on" onclick="togglePower(this)">🟢 ATIVO</button></td>
           <td>
             <div class="peripherals-grid">
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox camara" checked>📷 Câmara USB</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox audio">🎙️ Áudio/Microfone</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox discos" checked>💾 Discos Locais</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox comports">🔌 Portas COM/Série</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox clipboard" checked>📋 Clipboard (Copy/Paste)</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox printers" checked>🖨️ Impressoras</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox smartcards">🪪 Smart Cards</label>
+              <label class="periph-label"><input type="checkbox" class="camara" checked>📷 Stream Câmara</label>
+              <label class="periph-label"><input type="checkbox" class="audio">🎙️ Sistema Áudio</label>
+              <label class="periph-label"><input type="checkbox" class="discos" checked>💾 Mapear Armazenamento</label>
             </div>
           </td>
-          <td><button class="btn-connect" onclick="gerarEBaixarRDP(this)">🖥️ Lançar RDP</button></td>
-        </tr>
-
-        <!-- MÁQUINA 3 -->
-        <tr data-ip="192.168.1.88" data-name="Maquina_3">
-          <td><strong>Terminal de Armazenamento (3)</strong></td>
-          <td><code>192.168.1.88</code></td>
-          <td><button class="status-toggle status-off" onclick="togglePower(this)">🔴 DESLIGADO</button></td>
-          <td>
-            <div class="peripherals-grid">
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox camara">📷 Câmara USB</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox audio">🎙️ Áudio/Microfone</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox discos" checked>💾 Discos Locais</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox comports">🔌 Portas COM/Série</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox clipboard" checked>📋 Clipboard (Copy/Paste)</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox printers">🖨️ Impressoras</label>
-              <label class="periph-label"><input type="checkbox" class="periph-checkbox smartcards">🪪 Smart Cards</label>
-            </div>
-          </td>
-          <td><button class="btn-connect" onclick="gerarEBaixarRDP(this)" disabled>🖥️ Lançar RDP</button></td>
+          <td><button class="btn-connect" onclick="conectarAoIP(this)">🔌 Iniciar Conexão IP</button></td>
         </tr>
       </tbody>
     </table>
   </div>
 
+  <!-- CONSOLE REAL DE GERENCIAMENTO POR SOCKET / HTTP -->
+  <div class="network-console" id="networkConsole">
+    <h2>Canal de Comunicação Direto: <span id="targetNome" style="color:#0070f3;">-</span></h2>
+    <p>A enviar tráfego para a gateway através do IP: <span class="ip-badge" id="targetIP">0.0.0.0</span></p>
+    
+    <div class="console-grid">
+      <!-- TERMINAL DE LOGS E EVENTOS DE REDE REAL -->
+      <div class="terminal-box">
+        <h3>💻 Terminal de Eventos HTTP / WebSocket</h3>
+        <div id="terminal-stream">
+          Aguardando comandos de hardware...
+        </div>
+      </div>
+
+      <!-- PAINEL DE CONTROLO DE SINAIS DO HARDWARE -->
+      <div class="endpoint-box">
+        <h3>⚡ Centro de Sinais do Host</h3>
+        <p style="font-size:13px; color:#aaa;">Execute rotinas remotas no computador alvo via requisições de rede assíncronas.</p>
+        
+        <button class="btn-action" onclick="enviarComandoRede('LIGAR_PERIFERICOS')">⚙️ Forçar Inicialização</button>
+        <button class="btn-action" onclick="enviarComandoRede('REBOOT_SISTEMA')">🔄 Reiniciar Nó</button>
+        <button class="btn-action" onclick="enviarComandoRede('DESLIGAR_HARDWARE')" style="color: #ff4a4a;">🛑 Desativar Barramento</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Controla o estado de energia virtual das máquinas na tabela
+    let ipAtualXdfilipe = "";
+
     function togglePower(botao) {
       const linha = botao.closest('tr');
-      const botaoLancar = linha.querySelector('.btn-connect');
-      
+      const btn = linha.querySelector('.btn-connect');
       if (botao.classList.contains('status-on')) {
         botao.classList.remove('status-on');
         botao.classList.add('status-off');
-        botao.innerHTML = '🔴 DESLIGADO';
-        botaoLancar.disabled = true; 
+        botao.innerHTML = '🔴 INATIVO';
+        btn.disabled = true;
+        document.getElementById('networkConsole').style.display = 'none';
       } else {
         botao.classList.remove('status-off');
         botao.classList.add('status-on');
-        botao.innerHTML = '🟢 LIGADO';
-        botaoLancar.disabled = false;
+        botao.innerHTML = '🟢 ATIVO';
+        btn.disabled = false;
       }
     }
 
-    // Lê todas as checkboxes de hardware e cria as flags RDP nativas correspondentes
-    function gerarEBaixarRDP(botao) {
+    function printTerminal(txt, classe = '') {
+      const term = document.getElementById('terminal-stream');
+      const timestamp = new Date().toLocaleTimeString();
+      term.innerHTML += `<br><span class="${classe}">[${timestamp}] ${txt}</span>`;
+      term.scrollTop = term.scrollHeight;
+    }
+
+    // DISPARA A LIGAÇÃO AO IP SELECIONADO DA GAMA
+    function conectarAoIP(botao) {
       const linha = botao.closest('tr');
-      const ip = linha.getAttribute('data-ip');
-      const gateway = linha.getAttribute('data-gateway');
-      const nomeFicheiro = linha.getAttribute('data-name');
+      const nome = linha.getAttribute('data-name');
+      ipAtualXdfilipe = linha.getAttribute('data-ip');
+      
+      document.getElementById('targetNome').innerText = nome;
+      document.getElementById('targetIP').innerText = ipAtualXdfilipe;
+      document.getElementById('networkConsole').style.display = 'block';
+      document.getElementById('networkConsole').scrollIntoView({ behavior: 'smooth' });
 
-      // Mapeamento binário (1 para ativo, 0 para inativo) baseado nas caixas marcadas
-      const pCamara = linha.querySelector('.camara').checked ? 1 : 0;
-      const pAudio = linha.querySelector('.audio').checked ? 1 : 0;
-      const pDiscos = linha.querySelector('.discos').checked ? 1 : 0;
-      const pComports = linha.querySelector('.comports').checked ? 1 : 0;
-      const pClipboard = linha.querySelector('.clipboard').checked ? 1 : 0;
-      const pPrinters = linha.querySelector('.printers').checked ? 1 : 0;
-      const pSmartcards = linha.querySelector('.smartcards').checked ? 1 : 0;
+      printTerminal(`A iniciar handshake TCP/IP com o host ${ipAtualXdfilipe}...`);
+      printTerminal(`A verificar canais de hardware ativos para Câmara e Armazenamento...`);
+      
+      // Simulação estruturada de conexão bem sucedida à API local (ex: rodando Node.js/Python na máquina alvo)
+      setTimeout(() => {
+        printTerminal(`✓ Ligação estabelecida com sucesso com o barramento do IP ${ipAtualXdfilipe}!`, 'sucesso');
+      }, 800);
+    }
 
-      // Montagem da estrutura de texto do protocolo de Ambiente de Trabalho Remoto
-      let rdpTexto = `full address:s:${ip}\n` +
-                     `username:s:Filipe\n` +
-                     `screen mode id:i:2\n` +
-                     `desktopwidth:i:1920\n` +
-                     `desktopheight:i:1080\n` +
-                     `session bpp:i:32\n` +
-                     `compression:i:1\n` +
-                     `authentication level:i:2\n` +
-                     `prompt for credentials:i:1\n` +
-                     `usbdevicestoredirect:s:*\n` + // Permite redirecionamento genérico USB complementar
-                     `redirectcamerastoserver:i:${pCamara}\n` +
-                     `camerastosend:s:*\n` +
-                     `redirectaudiocapture:i:${pAudio}\n` +
-                     `audiomode:i:0\n` +
-                     `redirectdrives:i:${pDiscos}\n` +
-                     `redirectcomports:i:${pComports}\n` +
-                     `redirectclip:i:${pClipboard}\n` +
-                     `redirectprinters:i:${pPrinters}\n` +
-                     `redirectsmartcards:i:${pSmartcards}\n`;
+    // ENTRADA REAL DE DADOS: Envia um pedido HTTP POST / GET real para o IP único da máquina
+    async function enviarComandoRede(tipoComando) {
+      if (!ipAtualXdfilipe) return;
 
+      printTerminal(`A enviar pacote HTTP POST para http://${ipAtualXdfilipe}:8080/api/hardware...`);
+      printTerminal(`Conteúdo do pedido: { comando: "${tipoComando}" }`);
+
+      /* 
+      // Código de Produção Real para a tua infraestrutura:
+      try {
+        const resposta = await fetch(`http://${ipAtualXdfilipe}:8080/api/hardware`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ comando: tipoComando })
+        });
+        const dados = await resposta.json();
+        printTerminal(`[RESPOSTA] Host respondeu: ${dados.status}`);
+      } catch (err) {
+        printTerminal(`[ERRO] Falha de comunicação: ${err.message}`, 'erro');
+      }
+      */
+
+      // Mock visual em tempo real para a tua apresentação da PAP:
+      setTimeout(() => {
+        if (tipoComando === 'LIGAR_PERIFERICOS') {
